@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".view.DetailsFragment"
+    android:layout_margin="10dp">
+
+    <TextView
+        android:id="@+id/detail_name_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Название: "
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detail_img"/>
+
+    <TextView
+        android:id="@+id/detail_year_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Год: "
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detail_name_header"/>
+
+    <TextView
+        android:id="@+id/detail_countries_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Страны: "
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detail_year_header"/>
+
+
+    <TextView
+        android:id="@+id/detail_genre_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Жанр: "
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detail_countries_header"/>
+
+
+    <TextView
+        android:id="@+id/detail_duration_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Длительность : "
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detail_genre_header"/>
+
+    <TextView
+        android:id="@+id/detail_premier_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Дата премьеры РФ : "
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/detail_duration_header"/>
+
+
+
+
+    <ImageView
+        android:id="@+id/detail_img"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:paddingBottom="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/detail_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Гладиатор"
+        app:layout_constraintStart_toEndOf="@id/detail_name_header"
+        app:layout_constraintTop_toBottomOf="@id/detail_img"/>
+
+    <TextView
+        android:id="@+id/detail_year"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="2000"
+        app:layout_constraintStart_toEndOf="@id/detail_year_header"
+        app:layout_constraintTop_toBottomOf="@id/detail_name"/>
+
+    <TextView
+        android:id="@+id/detail_countries"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="США"
+        app:layout_constraintStart_toEndOf="@id/detail_countries_header"
+        app:layout_constraintTop_toBottomOf="@id/detail_year"/>
+
+    <TextView
+        android:id="@+id/detail_genre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Исторический"
+        app:layout_constraintStart_toEndOf="@id/detail_genre_header"
+        app:layout_constraintTop_toBottomOf="@id/detail_countries"/>
+
+    <TextView
+        android:id="@+id/detail_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="120 мин"
+        app:layout_constraintStart_toEndOf="@id/detail_duration_header"
+        app:layout_constraintTop_toBottomOf="@id/detail_genre"/>
+
+    <TextView
+        android:id="@+id/detail_premier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="03.05.2000"
+        app:layout_constraintStart_toEndOf="@id/detail_premier_header"
+        app:layout_constraintTop_toBottomOf="@id/detail_duration"/>
+
+    <ImageButton
+        android:id="@+id/detail_share"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_baseline_share_24"
+        app:layout_constraintTop_toBottomOf="@id/detail_premier"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

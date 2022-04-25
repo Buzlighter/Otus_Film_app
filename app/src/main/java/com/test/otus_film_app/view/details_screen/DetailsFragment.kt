@@ -1,8 +1,7 @@
-package com.test.otus_film_app.view
+package com.test.otus_film_app.view.details_screen
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
@@ -12,7 +11,6 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.test.otus_film_app.R
 import com.test.otus_film_app.model.Film
-import com.test.otus_film_app.model.Genre
 import com.test.otus_film_app.util.Access.Companion.DETAILS_FRAGMENT_BUNDLE_KEY
 
 
@@ -41,13 +39,12 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
         premierDetailText = view.findViewById(R.id.detail_premier)
         shareImg = view.findViewById(R.id.detail_share)
 
-        film = this.arguments?.get(DETAILS_FRAGMENT_BUNDLE_KEY) as Film
+        film = arguments?.get(DETAILS_FRAGMENT_BUNDLE_KEY) as Film
 
         shareImg.setOnClickListener(shareClickListener)
         setDataDetail(film)
     }
 
-    var tempResult = ""
     @SuppressLint("SetTextI18n")
     private fun setDataDetail(film: Film?) {
         Glide.with(this).load(film?.posterUrlPreview).into(postDetailImg)
@@ -56,12 +53,14 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
         durationDetailText.text = "${film?.duration.toString()} мин"
         premierDetailText.text = film?.premiereRu
 
-        film?.countryList?.forEach { it -> tempResult += "${it?.country.toString()} " }
-        countriesDetailText.text = tempResult
 
-        tempResult = ""
-        film?.genreList?.forEach { it -> tempResult += "${it?.genre.toString()} " }
-        genreDetailText.text = tempResult
+        countriesDetailText.text = buildString {
+            film?.countryList?.forEach{ append("${it?.country} ") }
+        }
+
+        genreDetailText.text = buildString {
+            film?.genreList?.forEach { append("${it?.genre} ") }
+        }
     }
 
     private val shareClickListener = View.OnClickListener {

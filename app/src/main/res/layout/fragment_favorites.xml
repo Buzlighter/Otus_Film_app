@@ -3,12 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.FilmFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".view.favorites_screen.FavoriteListFragment">
+
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/film_recycler"
+        android:id="@+id/favorites_recycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"/>
 
 </FrameLayout>

@@ -1,5 +1,6 @@
 package com.test.otus_film_app.view.favorites_screen
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -8,6 +9,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.test.otus_film_app.App.Companion.filmDB
@@ -34,17 +36,11 @@ class FavoriteListFragment : Fragment(R.layout.fragment_favorites) {
 
 
     private fun fitRecyclerView() {
+        setScreenLayout()
         favoriteRecycler.apply {
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             favoriteAdapter = FavoritesAdapter(favoriteListener, requireContext())
             adapter = favoriteAdapter
             setHasFixedSize(true)
-
-            val dividerItemDecoration = DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL)
-            AppCompatResources.getDrawable(requireContext(), R.drawable.line_divider_recycler)?.let {
-                dividerItemDecoration.setDrawable(it)
-            }
-            addItemDecoration(dividerItemDecoration)
 
             var list: List<Film>?
             lifecycleScope.launch {
@@ -56,6 +52,27 @@ class FavoriteListFragment : Fragment(R.layout.fragment_favorites) {
                 }
             }
         }
+    }
+
+    private fun setScreenLayout() {
+        val orientation = activity?.resources?.configuration?.orientation
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            setDecorator()
+            favoriteRecycler.layoutManager = LinearLayoutManager(
+                requireContext(), LinearLayoutManager.VERTICAL, false)
+
+        } else {
+            favoriteRecycler.layoutManager = GridLayoutManager(
+                requireContext(), 2, LinearLayoutManager.VERTICAL, false)
+        }
+    }
+
+    private fun setDecorator() {
+        val dividerItemDecoration = DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL)
+        AppCompatResources.getDrawable(requireContext(), R.drawable.line_divider_recycler)?.let {
+            dividerItemDecoration.setDrawable(it)
+        }
+        favoriteRecycler.addItemDecoration(dividerItemDecoration)
     }
 
     private val favoriteListener = object: FilmClickListener {

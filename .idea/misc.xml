@@ -8,10 +8,12 @@
         <entry key="..\:/workspace/Otus_Film_app/app/src/main/res/drawable/ic_favorite.xml" value="0.25833333333333336" />
         <entry key="..\:/workspace/Otus_Film_app/app/src/main/res/drawable/ic_home.xml" value="0.25833333333333336" />
         <entry key="..\:/workspace/Otus_Film_app/app/src/main/res/drawable/line_divider_recycler.xml" value="0.26851851851851855" />
+        <entry key="..\:/workspace/Otus_Film_app/app/src/main/res/layout-land/film_item.xml" value="0.31040564373897706" />
+        <entry key="..\:/workspace/Otus_Film_app/app/src/main/res/layout-land/fragment_details.xml" value="0.1763668430335097" />
         <entry key="..\:/workspace/Otus_Film_app/app/src/main/res/layout/activity_main.xml" value="0.276268115942029" />
         <entry key="..\:/workspace/Otus_Film_app/app/src/main/res/layout/film_item.xml" value="0.276268115942029" />
         <entry key="..\:/workspace/Otus_Film_app/app/src/main/res/layout/fragment_detail.xml" value="0.26268115942028986" />
-        <entry key="..\:/workspace/Otus_Film_app/app/src/main/res/layout/fragment_details.xml" value="0.2554347826086957" />
+        <entry key="..\:/workspace/Otus_Film_app/app/src/main/res/layout/fragment_details.xml" value="0.14130434782608695" />
         <entry key="..\:/workspace/Otus_Film_app/app/src/main/res/layout/fragment_favorites.xml" value="0.23324275362318841" />
         <entry key="..\:/workspace/Otus_Film_app/app/src/main/res/layout/fragment_film.xml" value="0.276268115942029" />
         <entry key="..\:/workspace/Otus_Film_app/app/src/main/res/layout/fragment_filmlist.xml" value="0.23324275362318841" />

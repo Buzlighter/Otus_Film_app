@@ -1,17 +1,16 @@
 package com.test.otus_film_app.view.film_list_screen
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -48,22 +47,36 @@ class FilmListFragment : Fragment(R.layout.fragment_filmlist) {
     }
 
     private fun fitRecyclerView() {
+        setScreenLayout()
         filmRecycler.apply {
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             filmAdapter = FilmAdapter(filmListener, requireContext())
             adapter = filmAdapter
             setHasFixedSize(true)
-
-            val dividerItemDecoration = DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL)
-            AppCompatResources.getDrawable(requireContext(), R.drawable.line_divider_recycler)?.let {
-                dividerItemDecoration.setDrawable(it)
-            }
-            addItemDecoration(dividerItemDecoration)
-
             filmViewModel.filmData.observe(viewLifecycleOwner) {
                 filmAdapter?.setFilms(it.filmList)
             }
         }
+    }
+
+    private fun setScreenLayout() {
+        val orientation = activity?.resources?.configuration?.orientation
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            setDecorator()
+            filmRecycler.layoutManager = LinearLayoutManager(
+                requireContext(), LinearLayoutManager.VERTICAL, false)
+
+        } else {
+            filmRecycler.layoutManager = GridLayoutManager(
+                requireContext(), 2, LinearLayoutManager.VERTICAL, false)
+        }
+    }
+
+    private fun setDecorator() {
+        val dividerItemDecoration = DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL)
+        AppCompatResources.getDrawable(requireContext(), R.drawable.line_divider_recycler)?.let {
+            dividerItemDecoration.setDrawable(it)
+        }
+        filmRecycler.addItemDecoration(dividerItemDecoration)
     }
 
 

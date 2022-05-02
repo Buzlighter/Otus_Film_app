@@ -1,9 +1,11 @@
 package com.test.otus_film_app.view.film_list_screen
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
@@ -20,6 +22,7 @@ import com.test.otus_film_app.R
 import com.test.otus_film_app.model.Film
 import com.test.otus_film_app.util.Access.Companion.DETAILS_FRAGMENT_BUNDLE_KEY
 import com.test.otus_film_app.util.FilmClickListener
+import com.test.otus_film_app.util.FilmItemDecoration
 import com.test.otus_film_app.view.details_screen.DetailsFragment
 import com.test.otus_film_app.viewmodel.FilmViewModel
 import kotlinx.coroutines.Dispatchers
@@ -72,18 +75,13 @@ class FilmListFragment : Fragment(R.layout.fragment_filmlist) {
     }
 
     private fun setDecorator() {
-        val dividerItemDecoration = DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL)
-        AppCompatResources.getDrawable(requireContext(), R.drawable.line_divider_recycler)?.let {
-            dividerItemDecoration.setDrawable(it)
-        }
-        filmRecycler.addItemDecoration(dividerItemDecoration)
+        filmRecycler.addItemDecoration(FilmItemDecoration())
     }
 
 
     private val filmListener = object: FilmClickListener {
         override fun onFilmClick(film: Film, position: Int) {
             App.arrayOfPosition.add(position)
-
             bottomNav?.visibility = View.GONE
             val bundle = Bundle()
             bundle.putSerializable(DETAILS_FRAGMENT_BUNDLE_KEY, film)
@@ -92,6 +90,9 @@ class FilmListFragment : Fragment(R.layout.fragment_filmlist) {
                 addToBackStack(null)
                 setReorderingAllowed(true)
             }
+
+            Log.d("colorPos", App.arrayOfPosition.toString())
+
         }
 
         override fun onFilmLongClick(film: Film) {

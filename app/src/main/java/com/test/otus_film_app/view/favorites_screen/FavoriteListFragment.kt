@@ -16,6 +16,7 @@ import com.test.otus_film_app.App.Companion.filmDB
 import com.test.otus_film_app.R
 import com.test.otus_film_app.model.Film
 import com.test.otus_film_app.util.FilmClickListener
+import com.test.otus_film_app.util.FilmItemDecoration
 import com.test.otus_film_app.view.film_list_screen.FilmAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -68,11 +69,7 @@ class FavoriteListFragment : Fragment(R.layout.fragment_favorites) {
     }
 
     private fun setDecorator() {
-        val dividerItemDecoration = DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL)
-        AppCompatResources.getDrawable(requireContext(), R.drawable.line_divider_recycler)?.let {
-            dividerItemDecoration.setDrawable(it)
-        }
-        favoriteRecycler.addItemDecoration(dividerItemDecoration)
+        favoriteRecycler.addItemDecoration(FilmItemDecoration())
     }
 
     private val favoriteListener = object: FilmClickListener {

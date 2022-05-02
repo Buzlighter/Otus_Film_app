@@ -1,5 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Otus_Film_app</string>
     <string name="dialog_exit_fragment">Выйти из приложения?</string>
     <string name="dialog_exit_yes">ДА</string>
     <string name="dialog_exit_no">НЕТ</string>

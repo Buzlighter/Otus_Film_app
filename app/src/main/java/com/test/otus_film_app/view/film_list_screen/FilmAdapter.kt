@@ -13,6 +13,11 @@ import com.bumptech.glide.Glide
 import com.test.otus_film_app.R
 import com.test.otus_film_app.model.Film
 import com.test.otus_film_app.util.FilmClickListener
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
+
+import android.view.animation.ScaleAnimation
+
 
 class FilmAdapter(private val listener: FilmClickListener,
                   private val context: Context): RecyclerView.Adapter<FilmHolder>() {

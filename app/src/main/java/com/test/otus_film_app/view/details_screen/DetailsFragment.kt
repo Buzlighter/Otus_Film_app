@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.test.otus_film_app.R
 import com.test.otus_film_app.model.Film
 import com.test.otus_film_app.util.Access.Companion.DETAILS_FRAGMENT_BUNDLE_KEY
@@ -24,6 +25,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
     lateinit var durationDetailText: TextView
     lateinit var premierDetailText: TextView
     lateinit var shareImg: ImageButton
+    lateinit var toolBar: CollapsingToolbarLayout
 
     private var film: Film? = null
 
@@ -38,6 +40,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
         durationDetailText = view.findViewById(R.id.detail_duration)
         premierDetailText = view.findViewById(R.id.detail_premier)
         shareImg = view.findViewById(R.id.detail_share)
+        toolBar = view.findViewById(R.id.detail_toolbar)
 
         film = arguments?.get(DETAILS_FRAGMENT_BUNDLE_KEY) as Film
 
@@ -53,7 +56,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
         durationDetailText.text = "${film?.duration.toString()} мин"
         premierDetailText.text = film?.premiereRu
 
-
         countriesDetailText.text = buildString {
             film?.countryList?.forEach{ append("${it?.country} ") }
         }
@@ -61,6 +63,8 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
         genreDetailText.text = buildString {
             film?.genreList?.forEach { append("${it?.genre} ") }
         }
+
+        toolBar.title = film?.nameRu
     }
 
     private val shareClickListener = View.OnClickListener {

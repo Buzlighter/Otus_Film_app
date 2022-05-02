@@ -21,8 +21,9 @@ class FavoritesAdapter(private val listener: FilmClickListener,
     }
 
     fun deleteFavorites(film: Film) {
+        val deletePosition = favoriteList.indexOf(film)
         favoriteList.remove(film)
-        notifyDataSetChanged()
+        notifyItemRemoved(deletePosition)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilmHolder {

@@ -1,6 +1,7 @@
 package com.test.otus_film_app.view.film_list_screen
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -17,12 +18,15 @@ class FilmHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
     val headerText: TextView = itemView.findViewById(R.id.item_film_name)
     val filmImg: ImageView = itemView.findViewById(R.id.item_film_img)
 
-
     fun bind(film: Film, listener: FilmClickListener, context: Context, position: Int = 0) {
         Glide.with(context).load(film.posterUrlPreview).into(filmImg)
         headerText.text = film.nameRu
+
         if (App.arrayOfPosition.contains(position)) {
             headerText.setTextColor(ContextCompat.getColor(context, R.color.purple_200))
+        }
+        else {
+            headerText.setTextColor(ContextCompat.getColor(context, R.color.black))
         }
 
         itemView.setOnClickListener {

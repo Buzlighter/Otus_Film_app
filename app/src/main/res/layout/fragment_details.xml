@@ -14,11 +14,12 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/detail_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:contentScrim="@color/purple_700"
             app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
-            app:title="@string/app_name">
+            app:title="">
 
             <ImageView
                 android:id="@+id/detail_img"
@@ -107,6 +108,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="Гладиатор"
+                android:maxLines="1"
                 app:layout_constraintStart_toEndOf="@id/detail_name_header"
                 app:layout_constraintTop_toTopOf="parent" />
 

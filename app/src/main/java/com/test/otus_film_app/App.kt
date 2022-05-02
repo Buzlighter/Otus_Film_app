@@ -8,12 +8,14 @@ class App: Application() {
 
     companion object {
         lateinit var filmDB: FilmDatabase
-        var arrayOfPosition = mutableSetOf<Int>()
+        lateinit var arrayOfPosition: MutableSet<Int>
     }
 
     override fun onCreate() {
         super.onCreate()
         HttpClient.configureClient()
         filmDB = FilmDatabase.getDatabase(this)
+
+        arrayOfPosition = mutableSetOf()
     }
 }

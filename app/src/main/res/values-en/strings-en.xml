@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dialog_exit_fragment">Do you want to exit?</string>
+    <string name="dialog_exit_yes">Yes</string>
+    <string name="dialog_exit_no">No</string>
+
+    <string name="bottom_menu_home">Main</string>
+    <string name="bottom_menu_favorites">Favorite</string>
+</resources>

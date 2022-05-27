@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+
         bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.item_menu_favorites -> {
@@ -45,8 +46,10 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+        bottomNavigationView.setOnItemReselectedListener {
+            true
+        }
     }
-
 
     override fun onBackPressed() {
         if (supportFragmentManager.backStackEntryCount == 0) {

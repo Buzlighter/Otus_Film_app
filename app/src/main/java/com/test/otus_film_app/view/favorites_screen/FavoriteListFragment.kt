@@ -3,31 +3,31 @@ package com.test.otus_film_app.view.favorites_screen
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
 import com.test.otus_film_app.App.Companion.filmDB
 import com.test.otus_film_app.R
 import com.test.otus_film_app.model.Film
 import com.test.otus_film_app.util.FilmClickListener
 import com.test.otus_film_app.util.FilmItemDecoration
-import com.test.otus_film_app.view.film_list_screen.FilmAdapter
+import com.test.otus_film_app.view.common.FilmAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.internal.notifyAll
 
 class FavoriteListFragment : Fragment(R.layout.fragment_favorites) {
 
     private lateinit var favoriteRecycler: RecyclerView
+    private lateinit var favoriteAdapter: FilmAdapter
 
-    var favoriteAdapter: FavoritesAdapter? = null
+    private var favoriteFilmList = ArrayList<Film>()
+
+    private var snackbar: Snackbar? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -35,22 +35,23 @@ class FavoriteListFragment : Fragment(R.layout.fragment_favorites) {
         fitRecyclerView()
     }
 
-
     private fun fitRecyclerView() {
         setScreenLayout()
         favoriteRecycler.apply {
-            favoriteAdapter = FavoritesAdapter(favoriteListener, requireContext())
+            favoriteAdapter = FilmAdapter(favoriteListener)
             adapter = favoriteAdapter
-            setHasFixedSize(true)
-
-            var list: List<Film>?
-            lifecycleScope.launch {
-                withContext(Dispatchers.IO) {
-                    list = filmDB.filmDao().getAll()
+            setHasFixedSize(false)
+        }
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                filmDB.filmDao().getAll().forEach {
+                    if (it.isFavorite && !favoriteFilmList.contains(it)) {
+                        favoriteFilmList.add(it)
+                    }
                 }
-                withContext(Dispatchers.Main) {
-                    list?.let { favoriteAdapter?.setFavorites(it) }
-                }
+            }
+            withContext(Dispatchers.Main) {
+                favoriteAdapter.differ.submitList(favoriteFilmList)
             }
         }
     }
@@ -73,21 +74,30 @@ class FavoriteListFragment : Fragment(R.layout.fragment_favorites) {
     }
 
     private val favoriteListener = object: FilmClickListener {
-
-        override fun onFilmClick(film: Film, position: Int) {
+        override fun onFilmClick(film: Film) {
             TODO("Not yet implemented")
         }
 
-        override fun onFilmLongClick(film: Film) {
-            lifecycleScope.launch {
-                withContext(Dispatchers.IO) {
-                    filmDB.filmDao().delete(film)
-                }
-                withContext(Dispatchers.Main) {
-                    favoriteAdapter?.deleteFavorites(film)
-                }
+        override fun onFilmLongClick(film: Film, position: Int) {
+            lifecycleScope.launch(Dispatchers.IO) {
+               film.isFavorite = false
+               filmDB.filmDao().insertFavoriteFilm(film)
             }
-            Toast.makeText(requireContext(), "Удалено из избранного", Toast.LENGTH_SHORT).show()
+
+            favoriteFilmList.remove(film)
+            favoriteAdapter.apply {
+                notifyItemRemoved(position)
+                notifyItemRangeChanged(0, favoriteAdapter.itemCount)
+            }
+            getDeletedSnackBar().show()
         }
     }
+
+    fun getDeletedSnackBar(): Snackbar {
+        snackbar = Snackbar.make(favoriteRecycler, R.string.snackBar_deleted_favorites, Snackbar.LENGTH_SHORT)
+            .setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_FADE)
+            .setAnchorView(activity?.findViewById(R.id.bottom_navigation_view))
+        return snackbar as Snackbar
+    }
+
 }

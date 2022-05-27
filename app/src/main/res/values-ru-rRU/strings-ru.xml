@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="dialog_exit_fragment">Выйти из приложения?</string>
-    <string name="dialog_exit_yes">ДА</string>
-    <string name="dialog_exit_no">НЕТ</string>
-
-    <string name="bottom_menu_home">Главная</string>
-    <string name="bottom_menu_favorites">Избранное</string>
-</resources>

@@ -1,6 +1,6 @@
 package com.test.otus_film_app.util
 
-class Access {
+class Constants {
     companion object {
         const val KINOPOISK_API_KEY = "a5dcc7d2-34b0-43ef-ba88-9c72a0201838"
         const val KINOPOISK_URL = "https://kinopoiskapiunofficial.tech/api/v2.2/"

@@ -3,14 +3,20 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/workspace/Otus_Film_app/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.3828125" />
+        <entry key="..\:/workspace/Otus_Film_app/app/src/main/res/drawable/ic_baseline_error.xml" value="0.1915" />
         <entry key="..\:/workspace/Otus_Film_app/app/src/main/res/drawable/ic_baseline_share.xml" value="0.25833333333333336" />
         <entry key="..\:/workspace/Otus_Film_app/app/src/main/res/drawable/ic_baseline_share_24.xml" value="0.27314814814814814" />
         <entry key="..\:/workspace/Otus_Film_app/app/src/main/res/drawable/ic_favorite.xml" value="0.25833333333333336" />
         <entry key="..\:/workspace/Otus_Film_app/app/src/main/res/drawable/ic_home.xml" value="0.25833333333333336" />
+        <entry key="..\:/workspace/Otus_Film_app/app/src/main/res/drawable/ic_launcher_background.xml" value="0.3828125" />
         <entry key="..\:/workspace/Otus_Film_app/app/src/main/res/drawable/line_divider_recycler.xml" value="0.26851851851851855" />
         <entry key="..\:/workspace/Otus_Film_app/app/src/main/res/layout-land/film_item.xml" value="0.31040564373897706" />
         <entry key="..\:/workspace/Otus_Film_app/app/src/main/res/layout-land/fragment_details.xml" value="0.1763668430335097" />
         <entry key="..\:/workspace/Otus_Film_app/app/src/main/res/layout/activity_main.xml" value="0.276268115942029" />
+        <entry key="..\:/workspace/Otus_Film_app/app/src/main/res/layout/app_bar.xml" value="0.1725067385444744" />
+        <entry key="..\:/workspace/Otus_Film_app/app/src/main/res/layout/details_description.xml" value="0.34375" />
+        <entry key="..\:/workspace/Otus_Film_app/app/src/main/res/layout/error_page.xml" value="0.3125" />
         <entry key="..\:/workspace/Otus_Film_app/app/src/main/res/layout/film_item.xml" value="0.276268115942029" />
         <entry key="..\:/workspace/Otus_Film_app/app/src/main/res/layout/fragment_detail.xml" value="0.26268115942028986" />
         <entry key="..\:/workspace/Otus_Film_app/app/src/main/res/layout/fragment_details.xml" value="0.14130434782608695" />
@@ -22,7 +28,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_14_PREVIEW" project-jdk-name="14" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_14" default="true" project-jdk-name="14" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

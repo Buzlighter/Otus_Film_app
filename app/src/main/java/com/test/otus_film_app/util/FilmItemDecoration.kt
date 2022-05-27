@@ -1,13 +1,11 @@
 package com.test.otus_film_app.util
 
-import android.graphics.*
-import android.graphics.drawable.Drawable
-import android.util.Log
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Rect
 import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.test.otus_film_app.view.film_list_screen.FilmAdapter
-import androidx.annotation.NonNull
 
 class FilmItemDecoration: RecyclerView.ItemDecoration() {
 
@@ -31,6 +29,4 @@ class FilmItemDecoration: RecyclerView.ItemDecoration() {
         super.getItemOffsets(outRect, view, parent, state)
         outRect.set(0, 0, 0, 50)
     }
-
-
 }

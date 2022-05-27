@@ -37,5 +37,8 @@ data class Film(
     val duration: Int?,
     @ColumnInfo(name = "premiereRu")
     @SerializedName("premiereRu")
-    val premiereRu: String?
+    val premiereRu: String?,
+    @ColumnInfo(name = "isFavorite")
+    var isFavorite: Boolean = false
 ): Serializable
+

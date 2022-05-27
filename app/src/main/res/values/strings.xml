@@ -6,4 +6,8 @@
 
     <string name="bottom_menu_home">Главная</string>
     <string name="bottom_menu_favorites">Избранное</string>
+    <string name="snackBar_added_favorites">Добавлено в избранное</string>
+    <string name="snackBar_deleted_favorites">Удалено из Избранного</string>
+    <string name="snackBar_error_connection">Ошибка соединения</string>
+    <string name="snackBar_error_retry">Повторить запрос</string>
 </resources>

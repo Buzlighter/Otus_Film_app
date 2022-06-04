@@ -76,20 +76,13 @@ class FilmListFragment : Fragment(R.layout.fragment_filmlist) {
         }
     }
 
-    @Volatile
-    var filmList: List<Film>? = null
     private fun checkRequest(response: Resource<KinopoiskResponse>) {
+        filmViewModel.cacheData.observe(viewLifecycleOwner) { cacheData ->
+            filmAdapter.differ.submitList(cacheData)
+        }
         when (response) {
             is Resource.Success -> {
                 hideProgressBar()
-                lifecycleScope.launch {
-                    withContext(Dispatchers.IO) {
-                        filmList = filmDB.filmDao().getAll()
-                    }
-                    withContext(Dispatchers.Main) {
-                        filmAdapter.differ.submitList(filmList)
-                    }
-                }
                 bottomNav?.visibility = View.VISIBLE
                 pullToRefresh.visibility = View.VISIBLE
                 errorLayout.visibility = View.GONE
@@ -98,11 +91,11 @@ class FilmListFragment : Fragment(R.layout.fragment_filmlist) {
             }
             is Resource.Error -> {
                 hideProgressBar()
+                pullToRefresh.isRefreshing = false
                 lifecycleScope.launch {
                     var dbIsEmpty = false
                     withContext(Dispatchers.IO)  {
                         if (filmDB.filmDao().checkIsDbContain() == 0)  dbIsEmpty = true
-                        filmList = filmDB.filmDao().getAll()
                     }
                     withContext(Dispatchers.Main) {
                         if (dbIsEmpty)  {
@@ -116,7 +109,6 @@ class FilmListFragment : Fragment(R.layout.fragment_filmlist) {
                             bottomNav?.visibility = View.VISIBLE
                             pullToRefresh.visibility = View.VISIBLE
                             errorLayout.visibility = View.GONE
-                            filmAdapter.differ.submitList(filmList)
                         }
                     }
                 }

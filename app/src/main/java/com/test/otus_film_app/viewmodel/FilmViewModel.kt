@@ -17,6 +17,9 @@ class FilmViewModel : ViewModel() {
     private val localFilmData = MutableLiveData<Resource<KinopoiskResponse>>()
     val filmData: LiveData<Resource<KinopoiskResponse>> = localFilmData
 
+    val localCacheData = MutableLiveData<List<Film>>()
+    val cacheData: LiveData<List<Film>> = localCacheData
+
     init {
         getFilms()
     }
@@ -28,6 +31,7 @@ class FilmViewModel : ViewModel() {
                 val responseData = it.getFilmsPremier("2022", "JUNE")
                 localFilmData.postValue(handleResponse(responseData))
             } catch (e: Exception) {
+                localCacheData.postValue(App.filmDB.filmDao().getAll())
                 localFilmData.postValue(Resource.Error(null))
             }
         }
@@ -37,9 +41,11 @@ class FilmViewModel : ViewModel() {
         if (responseData.isSuccessful) {
             responseData.body()?.let { data ->
                 insertDataIntoDb(data.filmList)
+                localCacheData.postValue(App.filmDB.filmDao().getAll())
                 return Resource.Success(data)
             }
         }
+        localCacheData.postValue(App.filmDB.filmDao().getAll())
         return Resource.Error(null)
     }
 

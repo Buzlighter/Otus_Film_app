@@ -1,14 +1,10 @@
 package com.test.otus_film_app.view.film_list_screen
 import android.content.res.Configuration
-import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.os.SystemClock
 import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
-import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
@@ -36,9 +32,6 @@ import com.test.otus_film_app.view.details_screen.DetailsFragment
 import com.test.otus_film_app.viewmodel.FilmViewModel
 import com.test.otus_film_app.viewmodel.FilmViewModelFactory
 import kotlinx.coroutines.*
-import java.util.*
-import kotlin.concurrent.schedule
-import kotlin.coroutines.suspendCoroutine
 
 
 class FilmListFragment : Fragment(R.layout.fragment_filmlist) {
@@ -83,12 +76,20 @@ class FilmListFragment : Fragment(R.layout.fragment_filmlist) {
         }
     }
 
+    @Volatile
+    var filmList: List<Film>? = null
     private fun checkRequest(response: Resource<KinopoiskResponse>) {
         when (response) {
             is Resource.Success -> {
                 hideProgressBar()
-                filmAdapter.differ.submitList(response.data?.filmList)
-
+                lifecycleScope.launch {
+                    withContext(Dispatchers.IO) {
+                        filmList = filmDB.filmDao().getAll()
+                    }
+                    withContext(Dispatchers.Main) {
+                        filmAdapter.differ.submitList(filmList)
+                    }
+                }
                 bottomNav?.visibility = View.VISIBLE
                 pullToRefresh.visibility = View.VISIBLE
                 errorLayout.visibility = View.GONE
@@ -97,10 +98,29 @@ class FilmListFragment : Fragment(R.layout.fragment_filmlist) {
             }
             is Resource.Error -> {
                 hideProgressBar()
-                pullToRefresh.visibility = View.GONE
-                errorLayout.visibility = View.VISIBLE
-                bottomNav?.visibility = View.INVISIBLE
-                getErrorScreenSnackBar().show()
+                lifecycleScope.launch {
+                    var dbIsEmpty = false
+                    withContext(Dispatchers.IO)  {
+                        if (filmDB.filmDao().checkIsDbContain() == 0)  dbIsEmpty = true
+                        filmList = filmDB.filmDao().getAll()
+                    }
+                    withContext(Dispatchers.Main) {
+                        if (dbIsEmpty)  {
+                            getInstanceErrorScreenSnackBar(null).show()
+                            errorLayout.visibility = View.VISIBLE
+                            pullToRefresh.visibility = View.GONE
+                            bottomNav?.visibility = View.INVISIBLE
+                        }
+                        else {
+                            getInstanceErrorScreenSnackBar(bottomNav).show()
+                            bottomNav?.visibility = View.VISIBLE
+                            pullToRefresh.visibility = View.VISIBLE
+                            errorLayout.visibility = View.GONE
+                            filmAdapter.differ.submitList(filmList)
+                        }
+                    }
+                }
+
             }
             is Resource.Loading -> {
                 showProgressBar()
@@ -150,7 +170,7 @@ class FilmListFragment : Fragment(R.layout.fragment_filmlist) {
                     filmDB.filmDao().insertFavoriteFilm(film)
                 }
             }
-            getFavoritesSnackBar().show()
+            getInstanceFavoritesSnackBar().show()
         }
     }
 
@@ -160,16 +180,17 @@ class FilmListFragment : Fragment(R.layout.fragment_filmlist) {
         isFromRefresher = true
     }
 
-    fun getFavoritesSnackBar(): Snackbar {
+    fun getInstanceFavoritesSnackBar(): Snackbar {
         addFavoriteSnackBar = Snackbar.make(filmRecycler, R.string.snackBar_added_favorites, Snackbar.LENGTH_SHORT)
             .setAnimationMode(ANIMATION_MODE_FADE)
             .setAnchorView(bottomNav)
         return addFavoriteSnackBar as Snackbar
     }
 
-    fun getErrorScreenSnackBar(): Snackbar {
+    fun getInstanceErrorScreenSnackBar(view: View?): Snackbar {
         errorSnackBar = Snackbar.make(errorLayout, R.string.snackBar_error_connection, Snackbar.LENGTH_INDEFINITE)
             .setAnimationMode(ANIMATION_MODE_SLIDE)
+            .setAnchorView(view)
             .setAction(R.string.snackBar_error_retry) {
                 filmViewModel.getFilms()
             }

@@ -13,7 +13,7 @@ data class Film(
     val id: Int?,
     @ColumnInfo(name = "nameRu")
     @SerializedName("nameRu")
-    val nameRu: String?,
+    var nameRu: String?,
     @ColumnInfo(name = "nameEn")
     @SerializedName("nameEn")
     val nameEn: String?,
@@ -39,6 +39,8 @@ data class Film(
     @SerializedName("premiereRu")
     val premiereRu: String?,
     @ColumnInfo(name = "isFavorite")
-    var isFavorite: Boolean = false
+    var isFavorite: Boolean = false,
+    @ColumnInfo(name = "watchLaterDate")
+    var notificationDate: String?
 ): Serializable
 

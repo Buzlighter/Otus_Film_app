@@ -16,6 +16,9 @@ interface FilmDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertFilmList(filmList: List<Film>)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertWatchLaterFilm(film: Film)
+
     @Delete
     fun delete(film: Film)
 

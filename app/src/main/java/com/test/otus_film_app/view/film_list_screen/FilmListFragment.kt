@@ -1,7 +1,7 @@
 package com.test.otus_film_app.view.film_list_screen
+import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
@@ -23,7 +23,12 @@ import com.test.otus_film_app.App.Companion.filmDB
 import com.test.otus_film_app.R
 import com.test.otus_film_app.model.Film
 import com.test.otus_film_app.model.KinopoiskResponse
-import com.test.otus_film_app.util.Constants.Companion.DETAILS_FRAGMENT_BUNDLE_KEY
+import com.test.otus_film_app.util.Constants.Companion.DETAILS_BUNDLE
+import com.test.otus_film_app.util.Constants.Companion.FROM_FILM_LIST_NOTIFY_BUNDLE
+import com.test.otus_film_app.util.Constants.Companion.FROM_NOTIFICATION
+import com.test.otus_film_app.util.Constants.Companion.REMOTE_BUNDLE
+import com.test.otus_film_app.util.Constants.Companion.TAG_REMOTE
+import com.test.otus_film_app.util.FILM_EXTRA
 import com.test.otus_film_app.util.FilmClickListener
 import com.test.otus_film_app.util.FilmItemDecoration
 import com.test.otus_film_app.util.Resource
@@ -31,7 +36,10 @@ import com.test.otus_film_app.view.common.FilmAdapter
 import com.test.otus_film_app.view.details_screen.DetailsFragment
 import com.test.otus_film_app.viewmodel.FilmViewModel
 import com.test.otus_film_app.viewmodel.FilmViewModelFactory
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class FilmListFragment : Fragment(R.layout.fragment_filmlist) {
@@ -40,6 +48,7 @@ class FilmListFragment : Fragment(R.layout.fragment_filmlist) {
 
     private lateinit var filmRecycler: RecyclerView
     private lateinit var filmAdapter: FilmAdapter
+    private var filmList: List<Film>? = null
 
     private var bottomNav: BottomNavigationView? = null
     var addFavoriteSnackBar: Snackbar? = null
@@ -47,7 +56,12 @@ class FilmListFragment : Fragment(R.layout.fragment_filmlist) {
     lateinit var progressBar: ProgressBar
     lateinit var errorLayout: ConstraintLayout
     lateinit var pullToRefresh: SwipeRefreshLayout
+    var fromNotification = false
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        fromNotification = arguments?.getBoolean(FROM_NOTIFICATION) ?: false
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -59,8 +73,31 @@ class FilmListFragment : Fragment(R.layout.fragment_filmlist) {
 
         bottomNav?.visibility = View.VISIBLE
 
+        if (fromNotification) {
+            transferFromNotification(savedInstanceState)
+            fromNotification = false
+        }
+
         fitRecyclerView()
-        pagination()
+
+        fillFilmList()
+    }
+
+
+    private fun transferFromNotification(savedInstanceState: Bundle?) {
+        val notifyBundle = Bundle()
+        val filmFromNotification = arguments?.getSerializable(FILM_EXTRA)
+        notifyBundle.apply {
+            putSerializable(FILM_EXTRA, filmFromNotification)
+            putBoolean(FROM_NOTIFICATION, fromNotification)
+        }
+        parentFragmentManager.commit {
+            if (savedInstanceState == null) {
+                replace<DetailsFragment>(R.id.fragment_main_container, FROM_FILM_LIST_NOTIFY_BUNDLE, notifyBundle)
+                addToBackStack(null)
+                setReorderingAllowed(true)
+            }
+        }
     }
 
     private fun fitRecyclerView() {
@@ -71,6 +108,9 @@ class FilmListFragment : Fragment(R.layout.fragment_filmlist) {
             adapter = filmAdapter
             setHasFixedSize(true)
         }
+    }
+
+    private fun fillFilmList() {
         filmViewModel.filmData.observe(viewLifecycleOwner) { response ->
             checkRequest(response)
         }
@@ -78,6 +118,7 @@ class FilmListFragment : Fragment(R.layout.fragment_filmlist) {
 
     private fun checkRequest(response: Resource<KinopoiskResponse>) {
         filmViewModel.cacheData.observe(viewLifecycleOwner) { cacheData ->
+            filmList = cacheData
             filmAdapter.differ.submitList(cacheData)
         }
         when (response) {
@@ -133,20 +174,20 @@ class FilmListFragment : Fragment(R.layout.fragment_filmlist) {
         }
     }
 
-    fun showProgressBar() {
+    private fun showProgressBar() {
         if(!isFromRefresher) progressBar.visibility = View.VISIBLE
     }
 
-    fun hideProgressBar() {
+    private fun hideProgressBar() {
         progressBar.visibility = View.INVISIBLE
     }
 
     private val filmListener = object: FilmClickListener {
-        override fun onFilmClick(film: Film) {
+        override fun onFilmClick(film: Film, position: Int) {
             val bundle = Bundle()
-            bundle.putSerializable(DETAILS_FRAGMENT_BUNDLE_KEY, film)
+            bundle.putSerializable(DETAILS_BUNDLE, film)
             parentFragmentManager.commit {
-                replace<DetailsFragment>(R.id.fragment_main_container, DETAILS_FRAGMENT_BUNDLE_KEY, bundle)
+                replace<DetailsFragment>(R.id.fragment_main_container, DETAILS_BUNDLE, bundle)
                 addToBackStack(null)
                 setReorderingAllowed(true)
             }
@@ -189,38 +230,12 @@ class FilmListFragment : Fragment(R.layout.fragment_filmlist) {
         return errorSnackBar as Snackbar
     }
 
-    fun pagination() {
-        filmRecycler.addOnScrollListener(filmScrollListener)
-    }
 
-    /* Временно искуственная пагинация, так как из API получаю объект разом и
-    нет возможности раздробить на порции получение данных, чтобы далее дробленные списки передавать в адаптер.
-    Поэтому в пагинации в данном случае нет смысла, к тому же размер списка в целом меньше 50 составляет и ячейки легкие
-     */
-
-    var offsetY = 0
-    private val filmScrollListener = object: RecyclerView.OnScrollListener() {
-        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-            super.onScrolled(recyclerView, dx, dy)
-
-            val y = filmRecycler.computeVerticalScrollOffset()
-            if ((y - offsetY) in 10000..12000) {
-                offsetY = y
-                val timer = object: CountDownTimer(1000, 1000) {
-                    override fun onTick(millisUntilFinished: Long) {
-                        showProgressBar()
-                        recyclerView.stopScroll()
-                        recyclerView.suppressLayout(true)
-                    }
-
-                    override fun onFinish() {
-                        hideProgressBar()
-                        recyclerView.suppressLayout(false)
-                    }
-                }.start()
-            }
-            Log.d("sss", "${y - offsetY}")
+    private fun fillListFromRemote(remoteDataYear: String?) {
+        val remoteList = filmList?.filter {
+            (it.year ?: 0) > (remoteDataYear?.toInt() ?: 0)
         }
+        filmAdapter.differ.submitList(remoteList)
+        filmAdapter.notifyDataSetChanged()
     }
-
 }

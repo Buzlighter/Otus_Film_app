@@ -122,11 +122,52 @@
 
     <TextView
         android:id="@+id/detail_premier"
-        android:layout_width="230dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:lines="2"
         android:hint="03.05.2000"
         app:layout_constraintStart_toEndOf="@id/detail_premier_header"
         app:layout_constraintTop_toBottomOf="@id/detail_duration" />
+
+    <CheckedTextView
+        android:id="@+id/watch_later_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Посмотреть позже"
+        android:lines="2"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:checked="false"
+        android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+        app:layout_constraintTop_toBottomOf="@id/detail_premier_header"
+        app:layout_constraintStart_toStartOf="@id/detail_premier_header"/>
+
+
+    <LinearLayout
+        android:id="@+id/calendar_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="@id/watch_later_checkbox"
+        app:layout_constraintTop_toBottomOf="@id/watch_later_checkbox">
+
+        <ImageButton
+            android:id="@+id/calendar_btn"
+            android:src="@drawable/ic_calendar_month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/calendar_text"
+            android:layout_width="90dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:hint="дд.мм.гггг"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:textSize="16sp" />
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

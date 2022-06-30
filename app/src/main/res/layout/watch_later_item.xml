@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="4dp"
+    android:layout_margin="5dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
+
+        <ImageView
+            android:id="@+id/item_film_img"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_launcher_background"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/item_film_name"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:hint="название фильма"
+            android:lines="2"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            app:layout_constraintStart_toEndOf="@id/item_film_img"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/item_header_year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Год выпуска:"
+            android:textSize="15sp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/item_film_name"
+            app:layout_constraintStart_toStartOf="@id/item_film_name"/>
+
+        <TextView
+            android:id="@+id/item_film_year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="1999"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/item_header_year"
+            app:layout_constraintTop_toTopOf="@id/item_header_year"
+            app:layout_constraintBottom_toBottomOf="@id/item_header_year"/>
+
+        <TextView
+            android:id="@+id/item_notification_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="10.02.2002"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/item_film_img"
+            app:layout_constraintStart_toEndOf="@id/item_calendar_img" />
+
+
+        <ImageView
+            android:id="@+id/item_calendar_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_calendar_month"
+            android:paddingStart="2dp"
+            android:paddingEnd="5dp"
+            app:layout_constraintStart_toEndOf="@id/item_film_img"
+            app:layout_constraintBottom_toBottomOf="@id/item_notification_date"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

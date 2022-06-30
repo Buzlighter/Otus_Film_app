@@ -9,7 +9,7 @@ import com.test.otus_film_app.model.Film
 import com.test.otus_film_app.util.Constants.Companion.DB_NAME
 import com.test.otus_film_app.util.DataConverter
 
-@Database(entities = [Film::class], version = 1, exportSchema = false)
+@Database(entities = [Film::class], version = 3, exportSchema = false)
 @TypeConverters(DataConverter::class)
 abstract class FilmDatabase: RoomDatabase() {
     abstract fun filmDao(): FilmDao

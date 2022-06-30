@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<defaultMap>
+    <entry>
+        <key>greetings</key>
+        <value>Hello From RemoteConfig</value>
+    </entry>
+</defaultMap>

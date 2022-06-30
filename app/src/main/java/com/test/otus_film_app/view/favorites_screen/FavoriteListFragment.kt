@@ -33,6 +33,7 @@ class FavoriteListFragment : Fragment(R.layout.fragment_favorites) {
         super.onViewCreated(view, savedInstanceState)
         favoriteRecycler = view.findViewById(R.id.favorites_recycler)
         fitRecyclerView()
+        fillFavoriteList()
     }
 
     private fun fitRecyclerView() {
@@ -42,6 +43,9 @@ class FavoriteListFragment : Fragment(R.layout.fragment_favorites) {
             adapter = favoriteAdapter
             setHasFixedSize(false)
         }
+    }
+
+    private fun fillFavoriteList() {
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 filmDB.filmDao().getAll().forEach {
@@ -74,8 +78,7 @@ class FavoriteListFragment : Fragment(R.layout.fragment_favorites) {
     }
 
     private val favoriteListener = object: FilmClickListener {
-        override fun onFilmClick(film: Film) {
-            TODO("Not yet implemented")
+        override fun onFilmClick(film: Film, position: Int) {
         }
 
         override fun onFilmLongClick(film: Film, position: Int) {

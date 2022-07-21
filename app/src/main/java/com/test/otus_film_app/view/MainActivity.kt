@@ -4,11 +4,10 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.bundleOf
+import androidx.fragment.app.add
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 import com.google.firebase.ktx.Firebase
@@ -16,9 +15,11 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
+import com.test.otus_film_app.App
+import com.test.otus_film_app.App.Companion.appComponent
 import com.test.otus_film_app.R
+import com.test.otus_film_app.di.modules.NotificationApiModule
 import com.test.otus_film_app.util.Constants.Companion.FROM_MAIN_ACTIVITY_NOTIFY_BUNDLE
-import com.test.otus_film_app.util.Constants.Companion.REMOTE_BUNDLE
 import com.test.otus_film_app.util.Constants.Companion.TAG_REMOTE
 import com.test.otus_film_app.util.ExitDialog
 import com.test.otus_film_app.util.ExitDialog.Companion.EXIT_DIALOG_TAG
@@ -27,8 +28,6 @@ import com.test.otus_film_app.view.details_screen.TOPIC
 import com.test.otus_film_app.view.favorites_screen.FavoriteListFragment
 import com.test.otus_film_app.view.film_list_screen.FilmListFragment
 import com.test.otus_film_app.view.watch_later_screen.WatchLaterListFragment
-import java.util.concurrent.Executors
-import java.util.concurrent.ThreadPoolExecutor
 
 
 class MainActivity : AppCompatActivity() {
@@ -59,6 +58,7 @@ class MainActivity : AppCompatActivity() {
 
         fireBaseSetRemoteConfig()
         fetchRemoteData()
+
     }
 
     private val onNavigationFilmMenuSelected = NavigationBarView.OnItemSelectedListener {
@@ -129,11 +129,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getData() {
-//        val fragment = supportFragmentManager.findFragmentByTag(FROM_MAIN_ACTIVITY_NOTIFY_BUNDLE)
         val remoteData = remoteConfig.getString("greetings")
         Log.d(TAG_REMOTE,  "RemoteData: $remoteData")
         Toast.makeText(this, remoteData, Toast.LENGTH_LONG).show()
-//        fragment?.arguments = bundleOf(Pair(REMOTE_BUNDLE, remoteData))
     }
 
     override fun onDestroy() {

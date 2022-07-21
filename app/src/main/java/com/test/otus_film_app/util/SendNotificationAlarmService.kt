@@ -23,9 +23,9 @@ class SendNotificationAlarmService(val context: Context, val calendar: Calendar)
     }
 
 
-    fun send(title: String, message: String, film: Film, pushViewModel: PushServiceViewModel,
+    fun send(title: String, message: String, film: Film,
              scheduledDay: Int, scheduledMonth: Int, scheduledYear: Int,
-             currentDay: Int, currentMonth: Int, currentYear: Int) {
+             currentDay: Int, currentMonth: Int, currentYear: Int): PushNotification? {
 
         val alarmIntent = Intent(context.applicationContext, DateAlarmReceiver::class.java)
 
@@ -33,14 +33,6 @@ class SendNotificationAlarmService(val context: Context, val calendar: Calendar)
             putExtra(FILM_EXTRA, film)
             putExtra(TITTLE_EXTRA, title)
             putExtra(MESSAGE_EXTRA, message)
-        }
-
-        if (currentDay == scheduledDay && currentMonth == scheduledMonth && currentYear == scheduledYear) {
-            val pushNotification = PushNotification(
-                NotificationData(title, message, film),
-                TOPIC
-            )
-            pushViewModel.sendNotification(pushNotification)
         }
 
         val pendingIntent = PendingIntent.getBroadcast(
@@ -57,5 +49,15 @@ class SendNotificationAlarmService(val context: Context, val calendar: Calendar)
             time,
             pendingIntent
         )
+
+        if (currentDay == scheduledDay && currentMonth == scheduledMonth && currentYear == scheduledYear) {
+            val pushNotification = PushNotification(
+                NotificationData(title, message, film),
+                TOPIC
+            )
+            return pushNotification
+        }
+
+        return null
     }
 }

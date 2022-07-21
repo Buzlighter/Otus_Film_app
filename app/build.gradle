@@ -32,6 +32,10 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    kapt {
+        generateStubs = true
+    }
 }
 
 dependencies {
@@ -87,10 +91,6 @@ dependencies {
     def card_version = "1.0.0"
     implementation "androidx.cardview:cardview:$card_version"
 
-    //Pagination
-    def paging_version = "3.1.1"
-    implementation "androidx.paging:paging-common-ktx:$paging_version"
-
     //Firebase
     implementation platform ('com.google.firebase:firebase-bom:30.1.0')
     implementation 'com.google.firebase:firebase-core:21.0.0'
@@ -98,5 +98,17 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-config'
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
+
+    //Rx
+    def rx_version = "3.0.0"
+    def adapter_version = "2.9.0"
+    implementation "io.reactivex.rxjava3:rxandroid:$rx_version"
+    implementation "io.reactivex.rxjava3:rxjava:$rx_version"
+    implementation "com.squareup.retrofit2:adapter-rxjava3:$adapter_version"
+
+    //Dagger
+    def dagger_version = "2.42"
+    implementation "com.google.dagger:dagger:$dagger_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
 
 }

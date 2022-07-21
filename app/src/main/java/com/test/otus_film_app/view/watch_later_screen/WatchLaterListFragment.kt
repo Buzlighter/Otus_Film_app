@@ -2,25 +2,25 @@ package com.test.otus_film_app.view.watch_later_screen
 
 import android.app.DatePickerDialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.test.otus_film_app.App
+import com.test.otus_film_app.App.Companion.appComponent
 import com.test.otus_film_app.R
+import com.test.otus_film_app.di.modules.NotificationApiModule
 import com.test.otus_film_app.model.Film
 import com.test.otus_film_app.util.FilmClickListener
-import com.test.otus_film_app.util.PushService
 import com.test.otus_film_app.util.SendNotificationAlarmService
 import com.test.otus_film_app.viewmodel.PushServiceViewModel
+import com.test.otus_film_app.viewmodel.PushViewModelFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.internal.notify
 import java.util.*
-import kotlin.collections.ArrayList
+import javax.inject.Inject
 
 
 class WatchLaterListFragment : Fragment(R.layout.fragment_watch_later_list) {
@@ -29,7 +29,10 @@ class WatchLaterListFragment : Fragment(R.layout.fragment_watch_later_list) {
 
     private var watchLaterFilmList = mutableListOf<Film>()
 
-    private val pushViewModel: PushServiceViewModel by viewModels()
+//    @Inject
+//    lateinit var pushViewModelFactory: PushViewModelFactory
+
+    private val pushViewModel: PushServiceViewModel by viewModels ()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -37,12 +40,16 @@ class WatchLaterListFragment : Fragment(R.layout.fragment_watch_later_list) {
 
         fitRecyclerView()
         fillWatchList()
+//        appComponent.notificationFragmentComponentBuilder()
+//            .notificationModule(NotificationApiModule())
+//            .build()
+//            .inject(this)
     }
 
     private fun fillWatchList() {
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
-                App.filmDB.filmDao().getAll().forEach {
+                appComponent.getFilmDao().getAll().forEach {
                     if (it.notificationDate != null && !watchLaterFilmList.contains(it)) {
                         watchLaterFilmList.add(it)
                     }
@@ -69,7 +76,7 @@ class WatchLaterListFragment : Fragment(R.layout.fragment_watch_later_list) {
     private fun setDateIntoDb(finalDate: String, film: Film) {
         lifecycleScope.launch(Dispatchers.IO) {
             film.notificationDate = finalDate
-            App.filmDB.filmDao().insertWatchLaterFilm(film)
+            appComponent.getFilmDao().insertWatchLaterFilm(film)
         }
     }
 
@@ -96,11 +103,14 @@ class WatchLaterListFragment : Fragment(R.layout.fragment_watch_later_list) {
                     val title = "Посмотреть фильм"
                     val message = film.nameRu ?: ""
 
-                    sendNotificationAlarmService.send(
-                        title, message, film, pushViewModel,
+                    val pushNotification = sendNotificationAlarmService.send(
+                        title, message, film,
                         currentDay, currentMonth + 1, currentYear,
                         day, month + 1, year
                     )
+                    if (pushNotification != null) {
+                        pushViewModel.sendNotification(pushNotification)
+                    }
                 },
                 currentYear, currentMonth, currentDay)
             datePickerDialog.show()

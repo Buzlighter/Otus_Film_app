@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
-import com.test.otus_film_app.App.Companion.filmDB
+import com.test.otus_film_app.App.Companion.appComponent
 import com.test.otus_film_app.R
 import com.test.otus_film_app.model.Film
 import com.test.otus_film_app.util.FilmClickListener
@@ -48,7 +48,7 @@ class FavoriteListFragment : Fragment(R.layout.fragment_favorites) {
     private fun fillFavoriteList() {
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
-                filmDB.filmDao().getAll().forEach {
+                appComponent.getFilmDao().getAll().forEach {
                     if (it.isFavorite && !favoriteFilmList.contains(it)) {
                         favoriteFilmList.add(it)
                     }
@@ -84,7 +84,7 @@ class FavoriteListFragment : Fragment(R.layout.fragment_favorites) {
         override fun onFilmLongClick(film: Film, position: Int) {
             lifecycleScope.launch(Dispatchers.IO) {
                film.isFavorite = false
-               filmDB.filmDao().insertFavoriteFilm(film)
+                appComponent.getFilmDao().insertFavoriteFilm(film)
             }
 
             favoriteFilmList.remove(film)

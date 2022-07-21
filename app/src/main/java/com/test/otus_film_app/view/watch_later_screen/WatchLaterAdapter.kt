@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.test.otus_film_app.R
 import com.test.otus_film_app.model.Film
 import com.test.otus_film_app.util.FilmClickListener
-import com.test.otus_film_app.view.common.FilmHolder
 
 class WatchLaterAdapter(private val clickListener: FilmClickListener): RecyclerView.Adapter<WatchLaterHolder>() {
 

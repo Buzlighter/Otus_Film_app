@@ -14,16 +14,20 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.test.otus_film_app.App
+import com.test.otus_film_app.App.Companion.appComponent
 import com.test.otus_film_app.R
+import com.test.otus_film_app.di.modules.NotificationApiModule
 import com.test.otus_film_app.model.Film
-import com.test.otus_film_app.util.*
 import com.test.otus_film_app.util.Constants.Companion.DETAILS_BUNDLE
 import com.test.otus_film_app.util.Constants.Companion.FROM_NOTIFICATION
+import com.test.otus_film_app.util.FILM_EXTRA
+import com.test.otus_film_app.util.SendNotificationAlarmService
 import com.test.otus_film_app.viewmodel.PushServiceViewModel
+import com.test.otus_film_app.viewmodel.PushViewModelFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
+import javax.inject.Inject
 
 const val CALENDAR_GROUP_VISIBILITY_TAG = "CALENDAR_GROUP_VISIBILITY_TAG"
 const val CALENDAR_DATE_TAG = "CALENDAR_DATE_TAG"
@@ -44,7 +48,10 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
     lateinit var calendarSetButton: ImageButton
     lateinit var checkBoxWatchLater: CheckedTextView
 
-    private val pushViewModel: PushServiceViewModel by viewModels()
+    @Inject
+    lateinit var pushViewModelFactory: PushViewModelFactory
+
+    private val pushViewModel: PushServiceViewModel by viewModels { pushViewModelFactory }
 
     var fromNotification = false
 
@@ -91,6 +98,10 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
         checkBoxWatchLater.setOnClickListener(watchLaterClickListener)
         calendarSetButton.setOnClickListener(setCalendarListener)
 
+        appComponent.notificationFragmentComponentBuilder()
+            .notificationModule(NotificationApiModule())
+            .build()
+            .inject(this)
     }
 
     fun checkOrientation(view: View) {
@@ -163,11 +174,14 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
                 val title = "Посмотреть фильм"
                 val message = film.nameRu ?: ""
 
-                sendNotificationAlarmService.send(
-                    title, message, film, pushViewModel,
+                val pushNotification = sendNotificationAlarmService.send(
+                    title, message, film,
                     currentDay, currentMonth + 1, currentYear,
                     day, month + 1, year
                 )
+                if (pushNotification != null) {
+                    pushViewModel.sendNotification(pushNotification)
+                }
             },
             currentYear, currentMonth, currentDay)
         datePickerDialog.show()
@@ -176,7 +190,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
     private fun setDateIntoDb(finalDate: String) {
         lifecycleScope.launch(Dispatchers.IO) {
             film.notificationDate = finalDate
-            App.filmDB.filmDao().insertWatchLaterFilm(film)
+            appComponent.getFilmDao().insertWatchLaterFilm(film)
         }
     }
 

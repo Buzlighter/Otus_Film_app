@@ -19,15 +19,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.BaseTransientBottomBar.ANIMATION_MODE_FADE
 import com.google.android.material.snackbar.BaseTransientBottomBar.ANIMATION_MODE_SLIDE
 import com.google.android.material.snackbar.Snackbar
-import com.test.otus_film_app.App.Companion.filmDB
+import com.test.otus_film_app.App.Companion.appComponent
 import com.test.otus_film_app.R
+import com.test.otus_film_app.di.modules.KinpoiskApiModule
 import com.test.otus_film_app.model.Film
 import com.test.otus_film_app.model.KinopoiskResponse
 import com.test.otus_film_app.util.Constants.Companion.DETAILS_BUNDLE
 import com.test.otus_film_app.util.Constants.Companion.FROM_FILM_LIST_NOTIFY_BUNDLE
 import com.test.otus_film_app.util.Constants.Companion.FROM_NOTIFICATION
-import com.test.otus_film_app.util.Constants.Companion.REMOTE_BUNDLE
-import com.test.otus_film_app.util.Constants.Companion.TAG_REMOTE
 import com.test.otus_film_app.util.FILM_EXTRA
 import com.test.otus_film_app.util.FilmClickListener
 import com.test.otus_film_app.util.FilmItemDecoration
@@ -37,14 +36,17 @@ import com.test.otus_film_app.view.details_screen.DetailsFragment
 import com.test.otus_film_app.viewmodel.FilmViewModel
 import com.test.otus_film_app.viewmodel.FilmViewModelFactory
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 
 class FilmListFragment : Fragment(R.layout.fragment_filmlist) {
 
-    private val filmViewModel: FilmViewModel by viewModels { FilmViewModelFactory() }
+    @Inject
+    lateinit var filmViewModelFactory: FilmViewModelFactory
+
+    val filmViewModel: FilmViewModel by viewModels { filmViewModelFactory }
 
     private lateinit var filmRecycler: RecyclerView
     private lateinit var filmAdapter: FilmAdapter
@@ -78,11 +80,15 @@ class FilmListFragment : Fragment(R.layout.fragment_filmlist) {
             fromNotification = false
         }
 
+        appComponent.filmListFragmentComponentBuilder()
+            .kinopoiskModule(KinpoiskApiModule())
+            .build()
+            .inject(this)
+
         fitRecyclerView()
 
         fillFilmList()
     }
-
 
     private fun transferFromNotification(savedInstanceState: Bundle?) {
         val notifyBundle = Bundle()
@@ -136,7 +142,7 @@ class FilmListFragment : Fragment(R.layout.fragment_filmlist) {
                 lifecycleScope.launch {
                     var dbIsEmpty = false
                     withContext(Dispatchers.IO)  {
-                        if (filmDB.filmDao().checkIsDbContain() == 0)  dbIsEmpty = true
+                        if (appComponent.getFilmDao().checkIsDbContain() == 0)  dbIsEmpty = true
                     }
                     withContext(Dispatchers.Main) {
                         if (dbIsEmpty)  {
@@ -200,7 +206,7 @@ class FilmListFragment : Fragment(R.layout.fragment_filmlist) {
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
                     film.isFavorite = true
-                    filmDB.filmDao().insertFavoriteFilm(film)
+                    appComponent.getFilmDao().insertFavoriteFilm(film)
                 }
             }
             getInstanceFavoritesSnackBar().show()

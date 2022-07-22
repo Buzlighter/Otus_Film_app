@@ -1,6 +1,7 @@
 package com.test.otus_film_app.di.components
 
 import android.content.Context
+import androidx.appcompat.app.AppCompatActivity
 import com.test.otus_film_app.App
 import com.test.otus_film_app.db.FilmDao
 import com.test.otus_film_app.di.modules.DatabaseModule
@@ -19,11 +20,15 @@ interface AppComponent {
 
     fun notificationFragmentComponentBuilder(): NotificationComponent.Builder
 
+    fun fireBaseRemoteComponentBuilder(): FirebaseRemoteComponent.Builder
+
     fun inject(app: App)
 
     fun getFilmDao(): FilmDao
 
-    fun getContext(): Context
+    fun getActivityContext(): AppCompatActivity
+
+    fun getAppContext(): Context
 
 
     @Component.Builder

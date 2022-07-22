@@ -18,6 +18,7 @@ import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.test.otus_film_app.App
 import com.test.otus_film_app.App.Companion.appComponent
 import com.test.otus_film_app.R
+import com.test.otus_film_app.di.modules.FirebaseRemoteModule
 import com.test.otus_film_app.di.modules.NotificationApiModule
 import com.test.otus_film_app.util.Constants.Companion.FROM_MAIN_ACTIVITY_NOTIFY_BUNDLE
 import com.test.otus_film_app.util.Constants.Companion.TAG_REMOTE
@@ -28,10 +29,12 @@ import com.test.otus_film_app.view.details_screen.TOPIC
 import com.test.otus_film_app.view.favorites_screen.FavoriteListFragment
 import com.test.otus_film_app.view.film_list_screen.FilmListFragment
 import com.test.otus_film_app.view.watch_later_screen.WatchLaterListFragment
+import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity() {
     private val dialogExit = ExitDialog()
+    @Inject
     lateinit var remoteConfig: FirebaseRemoteConfig
     lateinit var bottomNavigationView: BottomNavigationView
 
@@ -55,10 +58,10 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setOnItemReselectedListener {}
 
         firebaseGetCurrentToken()
-
-        fireBaseSetRemoteConfig()
+//        fireBaseSetRemoteConfig()
         fetchRemoteData()
 
+        appComponent.fireBaseRemoteComponentBuilder().activityContext(this).firebaseModule(FirebaseRemoteModule).build().inject(this)
     }
 
     private val onNavigationFilmMenuSelected = NavigationBarView.OnItemSelectedListener {
@@ -103,16 +106,15 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun fireBaseSetRemoteConfig() {
-        remoteConfig = Firebase.remoteConfig
-        val configSettings = remoteConfigSettings {
-            minimumFetchIntervalInSeconds = 3600
-        }
-        remoteConfig.setConfigSettingsAsync(configSettings)
-        remoteConfig.setDefaultsAsync(R.xml.remote_config_default)
-
-        Log.d(TAG_REMOTE, "start")
-    }
+//    private fun fireBaseSetRemoteConfig(): FirebaseRemoteConfig {
+//        return Firebase.remoteConfig.apply {
+//            val configSettings = remoteConfigSettings {
+//                minimumFetchIntervalInSeconds = 3600
+//            }
+//            remoteConfig.setConfigSettingsAsync(configSettings)
+//            remoteConfig.setDefaultsAsync(R.xml.remote_config_default)
+//        }
+//    }
 
 
     private fun fetchRemoteData() {

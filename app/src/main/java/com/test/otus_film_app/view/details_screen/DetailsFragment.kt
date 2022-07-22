@@ -99,7 +99,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
         calendarSetButton.setOnClickListener(setCalendarListener)
 
         appComponent.notificationFragmentComponentBuilder()
-            .notificationModule(NotificationApiModule())
+            .setNotificationModule(NotificationApiModule())
             .build()
             .inject(this)
     }

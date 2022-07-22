@@ -29,8 +29,8 @@ class WatchLaterListFragment : Fragment(R.layout.fragment_watch_later_list) {
 
     private var watchLaterFilmList = mutableListOf<Film>()
 
-//    @Inject
-//    lateinit var pushViewModelFactory: PushViewModelFactory
+    @Inject
+    lateinit var pushViewModelFactory: PushViewModelFactory
 
     private val pushViewModel: PushServiceViewModel by viewModels ()
 
@@ -40,10 +40,10 @@ class WatchLaterListFragment : Fragment(R.layout.fragment_watch_later_list) {
 
         fitRecyclerView()
         fillWatchList()
-//        appComponent.notificationFragmentComponentBuilder()
-//            .notificationModule(NotificationApiModule())
-//            .build()
-//            .inject(this)
+        appComponent.notificationFragmentComponentBuilder()
+            .setNotificationModule(NotificationApiModule())
+            .build()
+            .inject(this)
     }
 
     private fun fillWatchList() {

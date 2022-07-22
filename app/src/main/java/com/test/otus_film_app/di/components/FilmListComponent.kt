@@ -14,7 +14,7 @@ interface FilmListComponent {
 
     @Subcomponent.Builder
     interface Builder {
-        fun kinopoiskModule(kinopoiskApiModule: KinpoiskApiModule): Builder
+        fun setKinopoiskModule(kinopoiskApiModule: KinpoiskApiModule): Builder
         fun build(): FilmListComponent
     }
 }

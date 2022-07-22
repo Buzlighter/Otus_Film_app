@@ -2,7 +2,6 @@ package com.test.otus_film_app.view.film_list_screen
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -81,7 +80,7 @@ class FilmListFragment : Fragment(R.layout.fragment_filmlist) {
         }
 
         appComponent.filmListFragmentComponentBuilder()
-            .kinopoiskModule(KinpoiskApiModule())
+            .setKinopoiskModule(KinpoiskApiModule())
             .build()
             .inject(this)
 

@@ -19,7 +19,7 @@ interface NotificationComponent {
 
     @Subcomponent.Builder
     interface Builder {
-        fun notificationModule(notificationApiModule: NotificationApiModule): Builder
+        fun setNotificationModule(notificationApiModule: NotificationApiModule): Builder
         fun build(): NotificationComponent
     }
 }

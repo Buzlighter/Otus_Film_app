@@ -4,24 +4,17 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.add
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.google.firebase.remoteconfig.ktx.remoteConfig
-import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
-import com.test.otus_film_app.App
 import com.test.otus_film_app.App.Companion.appComponent
 import com.test.otus_film_app.R
-import com.test.otus_film_app.di.modules.FirebaseRemoteModule
-import com.test.otus_film_app.di.modules.NotificationApiModule
 import com.test.otus_film_app.util.Constants.Companion.FROM_MAIN_ACTIVITY_NOTIFY_BUNDLE
 import com.test.otus_film_app.util.Constants.Companion.TAG_REMOTE
+import com.test.otus_film_app.util.CustomRemoteConfig
 import com.test.otus_film_app.util.ExitDialog
 import com.test.otus_film_app.util.ExitDialog.Companion.EXIT_DIALOG_TAG
 import com.test.otus_film_app.util.PushService.Companion.NEW_TOKEN
@@ -35,7 +28,7 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity() {
     private val dialogExit = ExitDialog()
     @Inject
-    lateinit var remoteConfig: FirebaseRemoteConfig
+    lateinit var customRemoteConfig: CustomRemoteConfig
     lateinit var bottomNavigationView: BottomNavigationView
 
 
@@ -57,11 +50,10 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setOnItemSelectedListener(onNavigationFilmMenuSelected)
         bottomNavigationView.setOnItemReselectedListener {}
 
-        firebaseGetCurrentToken()
-//        fireBaseSetRemoteConfig()
-        fetchRemoteData()
+        appComponent.mainActivityComponentBuilder().create().inject(this)
 
-        appComponent.fireBaseRemoteComponentBuilder().activityContext(this).firebaseModule(FirebaseRemoteModule).build().inject(this)
+        firebaseGetCurrentToken()
+        fetchRemoteData()
     }
 
     private val onNavigationFilmMenuSelected = NavigationBarView.OnItemSelectedListener {
@@ -106,19 +98,8 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-//    private fun fireBaseSetRemoteConfig(): FirebaseRemoteConfig {
-//        return Firebase.remoteConfig.apply {
-//            val configSettings = remoteConfigSettings {
-//                minimumFetchIntervalInSeconds = 3600
-//            }
-//            remoteConfig.setConfigSettingsAsync(configSettings)
-//            remoteConfig.setDefaultsAsync(R.xml.remote_config_default)
-//        }
-//    }
-
-
     private fun fetchRemoteData() {
-        remoteConfig.fetchAndActivate()
+        customRemoteConfig.getFirebaseConfig().fetchAndActivate()
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     val updated = task.result
@@ -131,7 +112,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getData() {
-        val remoteData = remoteConfig.getString("greetings")
+        val remoteData = customRemoteConfig.getFirebaseConfig().getString("greetings")
         Log.d(TAG_REMOTE,  "RemoteData: $remoteData")
         Toast.makeText(this, remoteData, Toast.LENGTH_LONG).show()
     }

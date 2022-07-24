@@ -5,6 +5,8 @@ import com.test.otus_film_app.api.FilmApi
 import com.test.otus_film_app.api.NotificationAPI
 import com.test.otus_film_app.db.FilmDao
 import com.test.otus_film_app.model.Film
+import com.test.otus_film_app.model.KinopoiskResponse
+import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 
@@ -12,8 +14,6 @@ class FilmRepository @Inject constructor(val filmApi: FilmApi, val filmDao: Film
 
     var requestDateYear = "2022"
     var requestedMonth = "JUNE"
-
-    val compositeDisposable = CompositeDisposable()
 
 //    fun getFilms() = viewModelScope.launch(Dispatchers.IO) {
 //        FilmService.filmApi.let {
@@ -29,10 +29,6 @@ class FilmRepository @Inject constructor(val filmApi: FilmApi, val filmDao: Film
 //        }
 //    }
 
-
-    fun getFilms(): FilmApi{
-        return filmApi
-    }
 
 //    private fun handleResponse(responseData: Response<KinopoiskResponse>): Resource<KinopoiskResponse> {
 //        if (responseData.isSuccessful) {

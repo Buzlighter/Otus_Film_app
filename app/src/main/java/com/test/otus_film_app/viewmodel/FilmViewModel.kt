@@ -1,5 +1,6 @@
 package com.test.otus_film_app.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,6 +10,7 @@ import com.test.otus_film_app.model.KinopoiskResponse
 import com.test.otus_film_app.repository.FilmRepository
 import com.test.otus_film_app.util.Resource
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
@@ -51,17 +53,14 @@ class FilmViewModel(val filmRepository: FilmRepository) : ViewModel() {
                 .doOnSubscribe {
                     localFilmData.postValue(Resource.Loading())
                 }
-                .doOnSuccess {
-                    data -> insertDataIntoDb(data.filmList)
-                }
                 .doFinally {
                     localCacheData.postValue(App.appComponent.getFilmDao().getAll())
                 }
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ successData ->
-                    localFilmData.setValue(Resource.Success(successData))
+                    insertDataIntoDb(successData.filmList)
+                    localFilmData.postValue(Resource.Success(successData))
                 }, {
-                    localFilmData.setValue(Resource.Error(null))
+                    localFilmData.postValue(Resource.Error(null))
                 })
         )
     }

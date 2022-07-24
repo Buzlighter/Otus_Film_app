@@ -234,13 +234,4 @@ class FilmListFragment : Fragment(R.layout.fragment_filmlist) {
             }
         return errorSnackBar as Snackbar
     }
-
-
-    private fun fillListFromRemote(remoteDataYear: String?) {
-        val remoteList = filmList?.filter {
-            (it.year ?: 0) > (remoteDataYear?.toInt() ?: 0)
-        }
-        filmAdapter.differ.submitList(remoteList)
-        filmAdapter.notifyDataSetChanged()
-    }
 }

@@ -1,6 +1,7 @@
 package com.test.otus_film_app
 
 import android.app.Application
+import android.os.Build
 import com.google.firebase.FirebaseApp
 import com.test.otus_film_app.di.components.AppComponent
 import com.test.otus_film_app.di.components.DaggerAppComponent
@@ -15,7 +16,9 @@ class App: Application() {
     override fun onCreate() {
         super.onCreate()
 
-        FirebaseApp.initializeApp(this)
+        if (BuildConfig.DEBUG) {
+            FirebaseApp.initializeApp(this)
+        }
 
         appComponent = DaggerAppComponent.builder().appContext(this).build()
 

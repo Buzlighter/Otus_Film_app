@@ -1,6 +1,5 @@
 package com.test.otus_film_app.di.modules
 
-import com.test.otus_film_app.di.qualifiers.KinopoiskQualifier
 import com.test.otus_film_app.di.qualifiers.NotificationQualifier
 import com.test.otus_film_app.util.Constants
 import dagger.Module
@@ -9,7 +8,6 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module

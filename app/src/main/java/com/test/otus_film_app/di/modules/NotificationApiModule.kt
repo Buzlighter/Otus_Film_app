@@ -6,7 +6,6 @@ import com.test.otus_film_app.di.scopes.FragmentScope
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
-import retrofit2.create
 
 @Module
 class NotificationApiModule {

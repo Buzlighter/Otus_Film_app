@@ -11,6 +11,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 import com.google.firebase.messaging.FirebaseMessaging
 import com.test.otus_film_app.App.Companion.appComponent
+import com.test.otus_film_app.BuildConfig
 import com.test.otus_film_app.R
 import com.test.otus_film_app.util.Constants.Companion.FROM_MAIN_ACTIVITY_NOTIFY_BUNDLE
 import com.test.otus_film_app.util.Constants.Companion.TAG_REMOTE
@@ -46,14 +47,18 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
+
         bottomNavigationView.setOnItemSelectedListener(onNavigationFilmMenuSelected)
         bottomNavigationView.setOnItemReselectedListener {}
 
         appComponent.mainActivityComponentBuilder().create().inject(this)
 
-        firebaseGetCurrentToken()
-        fetchRemoteData()
+        if (BuildConfig.DEBUG) {
+            FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
+            firebaseGetCurrentToken()
+            fetchRemoteData()
+        }
+
     }
 
     private val onNavigationFilmMenuSelected = NavigationBarView.OnItemSelectedListener {

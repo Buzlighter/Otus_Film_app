@@ -2,18 +2,15 @@ package com.test.otus_film_app.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.test.otus_film_app.App
 import com.test.otus_film_app.api.NotificationAPI
-import com.test.otus_film_app.api.NotificationService
 import com.test.otus_film_app.model.PushNotification
-import com.test.otus_film_app.repository.FilmRepository
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class PushServiceViewModel(val notificationAPI: NotificationAPI): ViewModel() {
+class PushServiceViewModel(val notificationAPI: NotificationAPI, val dispatcherIO: CoroutineDispatcher): ViewModel() {
 
-    fun sendNotification(notification: PushNotification) = CoroutineScope(Dispatchers.IO).launch {
+    fun sendNotification(notification: PushNotification) = CoroutineScope(dispatcherIO).launch {
         try {
             val response = notificationAPI.postNotification(notification)
             if(response.isSuccessful) {

@@ -8,7 +8,6 @@ import com.test.otus_film_app.model.Film
 import com.test.otus_film_app.model.NotificationData
 import com.test.otus_film_app.model.PushNotification
 import com.test.otus_film_app.view.details_screen.TOPIC
-import com.test.otus_film_app.viewmodel.PushServiceViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
